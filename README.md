@@ -4,14 +4,10 @@ This library provides a client for doing simple publish/subscribe messaging with
 
 This library is derived almost entirely from the great work done here: https://github.com/knolleary/pubsubclient
 
-
-
 ## Examples
 
 The library comes with a number of example sketches. See File > Examples > PlugPlayMQTT
 within the Arduino application.
-
-
 
 ## Limitations
 
@@ -22,8 +18,6 @@ within the Arduino application.
    via `MQTT_KEEPALIVE` in `PubSubClient.h`.
  - The client uses MQTT 3.1.1 by default. It can be changed to use MQTT 3.1 by
    changing value of `MQTT_VERSION` in `PubSubClient.h`.
-
-
 
 ## Compatible Hardware
 
@@ -46,8 +40,6 @@ The library cannot currently be used with hardware based on the ENC28J60 chip â€
 such as the Nanode or the Nuelectronics Ethernet Shield. For those, there is an
 [alternative library](https://github.com/njh/NanodeMQTT) available.
 
-
-
 ## Install
 
 Clone (or download and unzip) the repository to `~/Documents/Arduino/libraries`
@@ -57,8 +49,6 @@ where `~/Documents/Arduino` is your sketchbook directory.
     > mkdir libraries
     > cd libraries
     > git clone https://github.com/plugplayco/plugplay-arduino-mqtt PlugPlayMQTT
-
-
 
 ## Usage
 
@@ -84,6 +74,9 @@ clientId += String(random(0xffff), HEX);
 
 client.connectPlugPlay(clientId.c_str());
 ```
+
+### char* createMsg(String dvName, float data0)
+### char* createMsg(String dvName, float data0, float data1)
 ### char* createMsg(String dvName, float data0, float data1, float data2)
 
 Create a message to publish
@@ -93,10 +86,6 @@ Arguments:
 - *data0* - first data
 - *data1* - second data
 - *data2* - third data
-
-Other functions:
-- char* **createMsg(String dvName, float data0)** - data1 and data2 are set to 0 
-- char* **createMsg(String dvName, float data0, float data1)** - data2 is set to 0
 
 ### boolean subPlugPlay(const char* topic)
 
@@ -126,8 +115,6 @@ client.getData((char*)payload,"data2");
 ### Other functions
 
 You can refer here: http://pubsubclient.knolleary.net 
-
-
 
 ## License
 

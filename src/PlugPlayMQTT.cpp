@@ -1,7 +1,5 @@
-
 #include "PlugPlayMQTT.h"
 #include "Arduino.h"
-
 
 PlugPlayMQTT& PlugPlayMQTT::setAuth( const char* userKey, const char* boardId) {
     this->_userKey = userKey;
