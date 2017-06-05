@@ -5,9 +5,9 @@
  with the ESP8266 board/library.
 
  It connects to an MQTT server then:
-  - publishes "hello world" to the topic "outTopic" every two seconds
+  - publishes a message containing 3 values (i.e. 0, 1, 2) to the topic "outTopic" every two seconds
   - subscribes to the topic "inTopic", printing out any messages
-    it receives. NB - it assumes the received payloads are strings not binary
+    it receives.
   - If the first character of the topic "inTopic" is an 1, switch ON the ESP Led,
     else switch it off
 
@@ -24,19 +24,24 @@
 */
 
 #include <ESP8266WiFi.h>
-#include <PubSubClient.h>
+#include <PlugPlayMQTT.h>
+
+#define USER_KEY  "........"
+#define BOARD_ID  "........"
+#define PLUGPLAY  "mqtt.plugplay.co"
 
 // Update these with values suitable for your network.
-
 const char* ssid = "........";
 const char* password = "........";
-const char* mqtt_server = "broker.mqtt-dashboard.com";
+
+// Init variables
+long lastMsg = 0;
+int value = 0;
+char* msg;
+float data;
 
 WiFiClient espClient;
-PubSubClient client(espClient);
-long lastMsg = 0;
-char msg[50];
-int value = 0;
+PlugPlayMQTT client(espClient);
 
 void setup_wifi() {
 
@@ -62,16 +67,15 @@ void setup_wifi() {
 }
 
 void callback(char* topic, byte* payload, unsigned int length) {
-  Serial.print("Message arrived [");
-  Serial.print(topic);
-  Serial.print("] ");
+  Serial.print("Message arrived --> ");
   for (int i = 0; i < length; i++) {
     Serial.print((char)payload[i]);
   }
   Serial.println();
 
   // Switch on the LED if an 1 was received as first character
-  if ((char)payload[0] == '1') {
+  data = client.getData((char*)payload,"data0");
+  if (data == 1) {
     digitalWrite(BUILTIN_LED, LOW);   // Turn the LED on (Note that LOW is the voltage level
     // but actually the LED is on; this is because
     // it is acive low on the ESP-01)
@@ -85,16 +89,20 @@ void reconnect() {
   // Loop until we're reconnected
   while (!client.connected()) {
     Serial.print("Attempting MQTT connection...");
+
     // Create a random client ID
     String clientId = "ESP8266Client-";
     clientId += String(random(0xffff), HEX);
+
     // Attempt to connect
-    if (client.connect(clientId.c_str())) {
-      Serial.println("connected");
+    if (client.connectPlugPlay(clientId.c_str())) {
       // Once connected, publish an announcement...
-      client.publish("outTopic", "hello world");
+      Serial.println("connected");
+      msg = client.createMsg("arduino", 0, 1, 2);
+      client.pubPlugPlay("outTopic", msg);
+      
       // ... and resubscribe
-      client.subscribe("inTopic");
+      client.subPlugPlay("inTopic");
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
@@ -109,7 +117,8 @@ void setup() {
   pinMode(BUILTIN_LED, OUTPUT);     // Initialize the BUILTIN_LED pin as an output
   Serial.begin(115200);
   setup_wifi();
-  client.setServer(mqtt_server, 1883);
+  client.setAuth(USER_KEY, BOARD_ID);
+  client.setServer(PLUGPLAY, 1883);
   client.setCallback(callback);
 }
 
@@ -124,9 +133,9 @@ void loop() {
   if (now - lastMsg > 2000) {
     lastMsg = now;
     ++value;
-    snprintf (msg, 75, "hello world #%ld", value);
+    msg = client.createMsg("arduino", value);
     Serial.print("Publish message: ");
     Serial.println(msg);
-    client.publish("outTopic", msg);
+    client.pubPlugPlay("outTopic", msg);
   }
 }

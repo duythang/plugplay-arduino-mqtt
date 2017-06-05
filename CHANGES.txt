@@ -1,3 +1,13 @@
+/************************ PlugPlayMQTT ***********************/
+
+1.0
+    * Addd ArduinoJson Lib at commit bff77ab 
+    * Add PlugPlayMQTT class
+    * Edit examples code
+    * Edit info files
+
+/************************ PubSubClient ***********************/
+
 2.4
    * Add MQTT_SOCKET_TIMEOUT to prevent it blocking indefinitely
      whilst waiting for inbound data

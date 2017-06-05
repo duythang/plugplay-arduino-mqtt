@@ -81,7 +81,7 @@
 #endif
 
 class PubSubClient {
-private:
+protected:
    Client* _client;
    uint8_t buffer[MQTT_MAX_PACKET_SIZE];
    uint16_t nextMsgId;
