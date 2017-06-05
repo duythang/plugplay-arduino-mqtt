@@ -1,0 +1,11 @@
+{
+    "board": "arduino:avr:megaADK",
+    "sketch6": "examples\\mqtt_reconnect_nonblocking\\mqtt_reconnect_nonblocking.ino",
+    "sketch5": "examples\\mqtt_publish_in_callback\\mqtt_publish_in_callback.ino",
+    "sketch4": "examples\\mqtt_esp8266\\mqtt_esp8266.ino",
+    "sketch3": "examples\\mqtt_basic\\mqtt_basic.ino",
+    "sketch2": "examples\\mqtt_auth\\mqtt_auth.ino",
+    "sketch1": "tests\\src\\wifi_esp8266\\wifi_esp8266.ino",
+    "sketch": "tests\\src\\wifi_shield\\wifi_shield.ino",
+    "port": "COM3"
+}
